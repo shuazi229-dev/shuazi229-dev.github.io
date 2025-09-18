@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pig pig Pig‘tasks</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF3366',
+                        secondary: '#33CCFF',
+                        accent: '#FFCC00',
+                        dark: '#4A4A4A',
+                        light: '#FFF9F9'
+                    },
+                    fontFamily: {
+                        funny: ['"Comic Sans MS"', '"Marker Felt"', 'cursive', 'sans-serif'],
+                        sans: ['"Comic Sans MS"', '"Marker Felt"', 'cursive', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            /* 动画效果 */
+            .bounce-xl {
+                animation: bounceXL 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+            }
+            .shake-crazy {
+                animation: shakeCrazy 0.5s ease-in-out;
+            }
+            .spin-wild {
+                animation: spinWild 1s ease-in-out;
+            }
+            .float-random {
+                animation: floatRandom 3s ease-in-out infinite;
+            }
+            .pop-big {
+                animation: popBig 0.4s ease-out;
+            }
+            .fade-in-fast {
+                animation: fadeIn 0.3s ease-out;
+            }
+            .slide-in {
+                animation: slideIn 0.5s ease-out;
+            }
+            .pulse-annoying {
+                animation: pulseAnnoying 1s infinite;
+            }
+        }
+        
+        /* 全局字体设置确保所有元素使用可爱风格字体，增强兼容性 */
+        *, *::before, *::after {
+            font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded MT Bold', 'Comic Neue', 'Kalam', 'Chalkboard SE', 'Marker Felt', 'Caveat', cursive, sans-serif !important;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* 确保body和主要内容区域的字体应用 */
+        body, .content, .game-area, .task-container, .fortune-container, .breakfast-container {
+            font-family: 'Comic Sans MS', 'Marker Felt', cursive, sans-serif !important;
+        }
+        
+        @keyframes bounceXL {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+        
+        @keyframes shakeCrazy {
+            0%, 100% { transform: translateX(0) rotate(0); }
+            10% { transform: translateX(-10px) rotate(-5deg); }
+            20% { transform: translateX(10px) rotate(5deg); }
+            30% { transform: translateX(-10px) rotate(-5deg); }
+            40% { transform: translateX(10px) rotate(5deg); }
+            50% { transform: translateX(-10px) rotate(-5deg); }
+            60% { transform: translateX(10px) rotate(5deg); }
+            70% { transform: translateX(-10px) rotate(-5deg); }
+            80% { transform: translateX(10px) rotate(5deg); }
+            90% { transform: translateX(-10px) rotate(-5deg); }
+        }
+        
+        @keyframes spinWild {
+            0% { transform: rotate(0deg) scale(0.5); opacity: 0; }
+            70% { transform: rotate(380deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        }
+        
+        @keyframes floatRandom {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5px, -10px) rotate(2deg); }
+            50% { transform: translate(0, -15px) rotate(0deg); }
+            75% { transform: translate(-5px, -10px) rotate(-2deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        @keyframes popBig {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulseAnnoying {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255, 51, 102, 0.6); }
+        }
+        /* 自定义小猪样式 */
+        .pig-icon {
+            background: linear-gradient(135deg, #ffb7d5 0%, #ff85b1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(255, 102, 163, 0.3);
+        }
+        
+        .pig-icon::before {
+            content: "🐷";
+            font-size: 3rem;
+        }
+        /* 贪吃蛇游戏样式 */
+        #snake-game {
+            position: relative;
+        }
+        
+        #snake-board {
+            border-collapse: collapse;
+            margin: 0 auto;
+            background-color: #f0f0f0;
+            border: 4px solid #4A4A4A;
+            border-radius: 8px;
+        }
+        
+        #snake-board td {
+            width: 12px;
+            height: 12px;
+        }
+        
+        .snake-head {
+            background-color: #33CCFF;
+            border-radius: 3px;
+        }
+        
+        .snake-body {
+            background-color: #66DDFF;
+            border-radius: 2px;
+        }
+        
+        .snake-food {
+            background-color: #FF3366;
+            border-radius: 50%;
+        }
+        
+        .snake-bomb {
+            background-color: #FFCC00;
+            animation: flash 1s infinite;
+        }
+        
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-light to-pink-50 min-h-screen font-funny text-dark overflow-x-hidden">
+    <!-- 音效提示（文字模拟） -->
+    <div id="sound-effect" class="fixed top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-50 hidden fade-in-fast">
+        <i class="fa fa-volume-up mr-1"></i> <span id="sound-text">叮咚～</span>
+    </div>
+    
+    <!-- 主容器 -->
+    <div class="max-w-3xl mx-auto p-4 md:p-6 relative">
+        
+        <!-- 标题区域 -->
+        <header class="text-center mb-8 slide-in">
+            <div class="relative inline-block mb-4">
+                <!-- 使用Base64编码的粉色小猪SVG -->
+                <div class="pig-icon w-24 h-24 rounded-full border-4 border-primary float-random">
+                    <!-- SVG小猪图标将通过CSS伪元素显示 -->
+                </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-primary mb-2 bounce-xl">
+                Pig pig Pig's tasks
+            </h1>
+            <p class="text-gray-600 text-lg mb-6">Please experience and relax!</p>
+            <div class="w-40 h-1 bg-secondary mx-auto rounded-full"></div>
+        </header>
+        
+        <!-- 主菜单 -->
+        <div id="main-menu" class="grid grid-cols-2 gap-4 mb-8 fade-in-fast">
+            <!-- 功能卡片1：贪吃蛇 -->
+            <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="snake">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-gamepad text-2xl text-secondary"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-1">贪吃蛇大作战</h3>
+                <p class="text-sm text-gray-500">输了的洗碗！</p>
+            </div>
+            
+            <!-- 功能卡片2：运势占卜 -->
+            <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="fortune">
+                <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-magic text-2xl text-accent"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-1">今日运势</h3>
+                <p class="text-sm text-gray-500">不准不要钱！</p>
+            </div>
+            
+            <!-- 功能卡片3：奇怪任务 -->
+            <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="tasks">
+                <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-random text-2xl text-primary"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-1">猪之任务生成器</h3>
+                <p class="text-sm text-gray-500">敢不敢接招？</p>
+            </div>
+            
+            <!-- 功能卡片4：早饭选择 -->
+            <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="breakfast">
+                <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-cutlery text-2xl text-green-500"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-1">早餐吃什么</h3>
+                <p class="text-sm text-gray-500">选择困难症救星</p>
+            </div>
+        </div>
+        
+
+        
+        <!-- 1. 贪吃蛇游戏 -->
+        <div id="snake-feature" class="hidden fade-in-fast">
+            <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 relative overflow-hidden">
+                <!-- 装饰元素 -->
+                <div class="absolute -top-8 -right-8 w-32 h-32 bg-secondary/10 rounded-full"></div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-secondary flex items-center">
+                        <i class="fa fa-gamepad mr-2"></i> 贪吃蛇大作战
+                    </h2>
+                    <!-- 专门优化的返回按钮 -->
+                    <button 
+                        id="snake-back-btn" 
+                        class="back-btn bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm transition-all" 
+                        style="position: relative; z-index: 9999; display: block; width: auto; height: auto;"
+                        onclick="console.log('返回按钮直接点击'); goToMainMenu(); return false;"
+                    >
+                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                    </button>
+                </div>
+                
+
+                
+                <div class="text-center mb-4">
+                    <p class="text-gray-600 mb-3">游戏规则：吃到食物变长，撞到墙或自己会死，吃到炸弹会变短！</p>
+                    <p class="text-red-500 text-sm mb-4">输的人负责洗碗三天！敢不敢玩？</p>
+                    
+                    <div class="flex justify-center gap-4 mb-4">
+                        <div class="bg-gray-100 px-3 py-1 rounded-full">
+                            <span class="text-sm">分数: <span id="snake-score" class="font-bold">0</span></span>
+                        </div>
+                        <div class="bg-gray-100 px-3 py-1 rounded-full">
+                            <span class="text-sm">长度: <span id="snake-length" class="font-bold">1</span></span>
+                        </div>
+                    </div>
+                    
+                    <!-- 游戏区域 -->
+                    <div id="snake-game" class="mb-4">
+                        <table id="snake-board"></table>
+                    </div>
+                    
+                    <!-- 控制按钮（适合触屏） -->
+                    <div class="snake-controls mt-6 max-w-xs mx-auto">
+                        <div class="flex justify-center mb-2">
+                            <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="up">
+                                <i class="fa fa-arrow-up text-secondary"></i>
+                            </button>
+                        </div>
+                        <div class="flex justify-center gap-2">
+                            <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="left">
+                                <i class="fa fa-arrow-left text-secondary"></i>
+                            </button>
+                            <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="down">
+                                <i class="fa fa-arrow-down text-secondary"></i>
+                            </button>
+                            <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="right">
+                                <i class="fa fa-arrow-right text-secondary"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 游戏控制 -->
+                    <div class="mt-6 flex justify-center gap-3">
+                        <button id="start-snake" class="bg-secondary hover:bg-secondary/90 text-white px-5 py-2 rounded-full text-sm transition-all">
+                            <i class="fa fa-play mr-1"></i> 开始游戏
+                        </button>
+                        <button id="pause-snake" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-full text-sm transition-all" disabled>
+                            <i class="fa fa-pause mr-1"></i> 暂停
+                        </button>
+                        <button id="reset-snake" class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full text-sm transition-all">
+                            <i class="fa fa-refresh mr-1"></i> 重新开始
+                        </button>
+                    </div>
+                    
+                    <!-- 游戏结束弹窗 -->
+                    <div id="snake-over" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden fade-in-fast">
+                        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center pop-big">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-meh-o text-3xl text-red-500"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">游戏结束！</h3>
+                            <p class="text-gray-600 mb-4">你的分数: <span id="final-score" class="font-bold">0</span></p>
+                            <p class="text-red-500 mb-6 text-sm">愿赌服输，下次你洗碗～</p>
+                            <div class="flex flex-col gap-3">
+                        <button id="restart-snake" class="bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-full transition-all w-full">
+                            再来一局
+                        </button>
+                        <button id="close-snake" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-full transition-all w-full">
+                            关闭
+                        </button>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 2. 运势占卜 -->
+        <div id="fortune-feature" class="hidden fade-in-fast">
+            <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 relative overflow-hidden">
+                <!-- 装饰元素 -->
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-accent/10 rounded-full"></div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-accent flex items-center">
+                        <i class="fa fa-magic mr-2"></i> 今日运势占卜
+                    </h2>
+                    <button class="back-btn bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm transition-all">
+                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-32 h-32 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                        <i class="fa fa-star text-4xl text-accent float-random"></i>
+                        <div class="absolute inset-0 border-4 border-dashed border-accent/30 rounded-full animate-spin-slow"></div>
+                    </div>
+                    
+                    <p class="mb-6 text-gray-600">想知道今天的运势吗？<br>点击下方按钮，让宇宙给你答案！</p>
+                    
+                    <button id="divine-btn" class="bg-accent hover:bg-accent/90 text-dark px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-8">
+                        <i class="fa fa-hand-paper-o mr-2"></i> 开始占卜
+                    </button>
+                    
+                    <!-- 运势结果 -->
+                    <div id="fortune-result" class="hidden">
+                        <div class="bg-gray-50 rounded-xl p-6 mb-6 pop-big">
+                            <h3 class="text-xl font-bold mb-3 text-accent" id="fortune-title">超好运日！</h3>
+                            <p class="text-gray-700 mb-4" id="fortune-description">
+                                今天猪会主动洗碗、捶背、买奶茶，并且不会顶嘴！快去命令TA做这做那吧～
+                            </p>
+                            <div class="flex justify-center">
+                                <div class="flex" id="fortune-stars">
+                                    <!-- 星星会动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button id="redivine-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-full transition-all">
+                            <i class="fa fa-refresh mr-1"></i> 再占一次
+                        </button>
+                    </div>
+                    
+                    <!-- 占卜动画 -->
+                    <div id="fortune-loading" class="hidden">
+                        <div class="w-16 h-16 border-4 border-accent/30 border-t-accent rounded-full mx-auto animate-spin mb-4"></div>
+                        <p class="text-gray-500">宇宙正在计算你的运势...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3. 奇怪任务生成器 -->
+        <div id="tasks-feature" class="hidden fade-in-fast">
+            <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 relative overflow-hidden">
+                <!-- 装饰元素 -->
+                <div class="absolute top-20 right-5 w-20 h-20 bg-primary/10 rounded-full"></div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-primary flex items-center">
+                        <i class="fa fa-random mr-2"></i> 猪之任务生成器
+                    </h2>
+                    <button class="back-btn bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm transition-all">
+                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-6 text-gray-600">生成一个让对方做的"好事"，<br>不做就要接受惩罚哦！</p>
+                    
+                    <button id="generate-task-btn" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-6">
+                        <i class="fa fa-bolt mr-2"></i> 生成任务
+                    </button>
+                    
+                    <!-- 任务卡片 -->
+                    <div id="task-card" class="bg-primary/5 rounded-2xl p-6 min-h-[180px] flex items-center justify-center hidden mb-6">
+                        <p id="task-text" class="text-xl text-gray-800 leading-relaxed">
+                            点击上面的按钮，生成你的专属任务～
+                        </p>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div id="task-actions" class="flex justify-center gap-4 mt-6 hidden">
+                        <button id="accept-task-btn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition-all">
+                            <i class="fa fa-check mr-1"></i> 接受
+                        </button>
+                        <button id="reject-task-btn" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full transition-all">
+                            <i class="fa fa-times mr-1"></i> 拒绝
+                        </button>
+                        <button id="new-task-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-full transition-all">
+                            <i class="fa fa-refresh mr-1"></i> 换一个
+                        </button>
+                    </div>
+                    
+                    <!-- 任务反馈 -->
+                    <div id="task-feedback" class="mt-6 text-center hidden"></div>
+                    
+                    <!-- 任务历史 -->
+                    <div class="mt-8">
+                        <h3 class="text-lg font-bold mb-3 flex items-center justify-center">
+                            <i class="fa fa-history text-gray-500 mr-2"></i> 任务历史
+                        </h3>
+                        <div id="tasks-history" class="space-y-2 max-h-[150px] overflow-y-auto pr-2 text-sm">
+                            <div class="bg-gray-50 p-2 rounded text-gray-600">
+                                <i class="fa fa-check-circle text-green-500 mr-1"></i> 学猫叫3声并摇尾巴
+                            </div>
+                            <div class="bg-gray-50 p-2 rounded text-gray-600">
+                                <i class="fa fa-times-circle text-red-500 mr-1"></i> 给对方洗袜子（拒绝）
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 4. 早饭吃什么 -->
+        <div id="breakfast-feature" class="hidden fade-in-fast">
+            <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 relative overflow-hidden">
+                <!-- 装饰元素 -->
+                <div class="absolute -top-6 -left-6 w-24 h-24 bg-green-500/10 rounded-full"></div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-green-500 flex items-center">
+                        <i class="fa fa-cutlery mr-2"></i> 早餐吃什么
+                    </h2>
+                    <button class="back-btn bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm transition-all">
+                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-6 text-gray-600">选择困难症？<br>让系统帮你决定今天吃什么！</p>
+                    
+                    <!-- 食物转盘 -->
+                    <div class="relative w-64 h-64 mx-auto mb-8">
+                        <div id="food-wheel" class="w-full h-full rounded-full border-8 border-green-500 overflow-hidden relative transition-all duration-500">
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="w-16 h-16 bg-white rounded-full z-10 shadow-md flex items-center justify-center">
+                                    <i class="fa fa-cutlery text-green-500 text-2xl"></i>
+                                </div>
+                            </div>
+                            <div id="wheel-inner" class="w-full h-full">
+                                <!-- 转盘内容会动态生成 -->
+                            </div>
+                        </div>
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-500 rounded-full z-20"></div>
+                    </div>
+                    
+                    <button id="spin-wheel-btn" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-6">
+                        <i class="fa fa-refresh mr-2"></i> 开始转盘
+                    </button>
+                    
+                    <!-- 结果显示 -->
+                    <div id="food-result" class="hidden mb-6">
+                        <div class="bg-green-50 rounded-xl p-5 pop-big">
+                            <h3 class="text-xl font-bold text-green-600 mb-2" id="result-food">小笼包</h3>
+                            <p class="text-gray-600" id="result-description">
+                                今天就吃小笼包吧！记得加醋，美味加倍～ 谁去买？石头剪刀布决定！
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 自定义选项 -->
+                    <div class="mt-8">
+                        <h3 class="text-lg font-bold mb-3">添加想吃的早餐</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-food" placeholder="比如：豆浆油条" class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <button id="add-food-btn" class="bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-full transition-all">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚彩蛋 -->
+        <footer class="text-center text-gray-500 text-sm mt-8 pb-6">
+            <p>本工具最终解释权归毛所有 <i class="fa fa-evil text-primary"></i></p>
+            <p class="mt-2">哈基米毛毛大人<button id="secret-easter-egg" class="text-xs text-gray-400 bg-transparent border-none cursor-pointer hover:text-primary">（偷偷点我）</button></p>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentFeature = null;
+        let snakeGame = null;
+        let wheelSpinning = false;
+        
+        // DOM元素
+        const mainMenu = document.getElementById('main-menu');
+        const features = {
+            snake: document.getElementById('snake-feature'),
+            fortune: document.getElementById('fortune-feature'),
+            tasks: document.getElementById('tasks-feature'),
+            breakfast: document.getElementById('breakfast-feature')
+        };
+        const soundEffect = document.getElementById('sound-effect');
+        const soundText = document.getElementById('sound-text');
+        const secretEasterEgg = document.getElementById('secret-easter-egg');
+        
+        // 显示音效提示
+        function showSound(text) {
+            soundText.textContent = text;
+            soundEffect.classList.remove('hidden');
+            setTimeout(() => {
+                soundEffect.classList.add('hidden');
+            }, 1000);
+        }
+        
+        // 切换功能
+        function switchFeature(featureName) {
+            // 隐藏所有功能
+            Object.values(features).forEach(el => {
+                if (el) el.classList.add('hidden');
+            });
+            
+            // 显示选中功能
+            if (features[featureName]) {
+                features[featureName].classList.remove('hidden');
+                currentFeature = featureName;
+                
+                // 特殊初始化
+                if (featureName === 'snake' && !snakeGame) {
+                    initSnakeGame();
+                } else if (featureName === 'breakfast' && !wheelSpinning) {
+                    initFoodWheel();
+                }
+                
+                // 绑定返回按钮事件
+                setTimeout(() => {
+                    bindBackButtons();
+                }, 50);
+            }
+            
+            showSound(`进入${getFeatureName(featureName)}！`);
+        }
+        
+        // 获取功能名称
+        function getFeatureName(feature) {
+            const names = {
+                snake: '贪吃蛇',
+                fortune: '运势占卜',
+                tasks: '互怼任务',
+                breakfast: '早餐选择'
+            };
+            return names[feature] || feature;
+        }
+        
+        // 返回主菜单
+        function goToMainMenu() {
+            // 暂停所有可能的游戏/动画
+            if (snakeGame && snakeGame.running) {
+                snakeGame.pause();
+                const pauseBtn = document.getElementById('pause-snake');
+                const startBtn = document.getElementById('start-snake');
+                if (pauseBtn) pauseBtn.disabled = false;
+                if (startBtn) startBtn.disabled = true;
+            }
+            
+            // 隐藏所有功能，显示主菜单
+            Object.values(features).forEach(el => {
+                if (el) el.classList.add('hidden');
+            });
+            if (mainMenu) mainMenu.classList.remove('hidden');
+            currentFeature = null;
+            
+            showSound('返回主菜单！');
+        }
+        
+        // 修复贪吃蛇返回按钮特殊问题
+        function fixSnakeBackButton() {
+            // 专门针对贪吃蛇功能的返回按钮进行基本设置
+            const snakeBackBtn = document.getElementById('snake-back-btn');
+            if (snakeBackBtn) {
+                // 确保按钮可见且可点击
+                snakeBackBtn.style.display = 'block';
+                snakeBackBtn.style.visibility = 'visible';
+                snakeBackBtn.style.opacity = '1';
+                snakeBackBtn.style.pointerEvents = 'auto';
+            }
+        }
+        
+        // 绑定所有返回按钮事件
+        function bindBackButtons() {
+            // 为所有返回按钮添加点击事件
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                // 确保按钮可见且可点击
+                btn.style.display = 'block';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                btn.style.cursor = 'pointer';
+                
+                // 添加点击事件
+                btn.addEventListener('click', function(e) {
+                    goToMainMenu();
+                    e.stopPropagation();
+                });
+            });
+        }
+        
+        // 主菜单点击事件
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const feature = card.getAttribute('data-feature');
+                mainMenu.classList.add('hidden');
+                switchFeature(feature);
+            });
+        });
+        
+        // 1. 贪吃蛇游戏实现
+        function initSnakeGame() {
+            const boardEl = document.getElementById('snake-board');
+            const scoreEl = document.getElementById('snake-score');
+            const lengthEl = document.getElementById('snake-length');
+            const startBtn = document.getElementById('start-snake');
+            const pauseBtn = document.getElementById('pause-snake');
+            const restartBtn = document.getElementById('restart-snake');
+            const closeBtn = document.getElementById('close-snake');
+            const gameOverEl = document.getElementById('snake-over');
+            const finalScoreEl = document.getElementById('final-score');
+            
+            // 游戏配置
+            const config = {
+                rows: 20,
+                cols: 20,
+                initialSpeed: 200,
+                speedIncrease: 5
+            };
+            
+            // 创建游戏板
+            function createBoard() {
+                boardEl.innerHTML = '';
+                for (let y = 0; y < config.rows; y++) {
+                    const row = document.createElement('tr');
+                    for (let x = 0; x < config.cols; x++) {
+                        const cell = document.createElement('td');
+                        cell.id = `cell-${x}-${y}`;
+                        row.appendChild(cell);
+                    }
+                    boardEl.appendChild(row);
+                }
+            }
+            
+            // 游戏状态
+            let state = {
+                snake: [{x: 10, y: 10}],
+                direction: 'right',
+                nextDirection: 'right',
+                food: {x: 5, y: 10},
+                bomb: null,
+                score: 0,
+                speed: config.initialSpeed,
+                running: false,
+                timer: null
+            };
+            
+            // 渲染游戏
+            function render() {
+                // 清空所有单元格
+                document.querySelectorAll('#snake-board td').forEach(cell => {
+                    cell.className = '';
+                });
+                
+                // 渲染蛇头
+                const head = state.snake[0];
+                document.getElementById(`cell-${head.x}-${head.y}`).className = 'snake-head';
+                
+                // 渲染蛇身
+                for (let i = 1; i < state.snake.length; i++) {
+                    const segment = state.snake[i];
+                    document.getElementById(`cell-${segment.x}-${segment.y}`).className = 'snake-body';
+                }
+                
+                // 渲染食物
+                document.getElementById(`cell-${state.food.x}-${state.food.y}`).className = 'snake-food';
+                
+                // 渲染炸弹（偶尔出现）
+                if (state.bomb) {
+                    document.getElementById(`cell-${state.bomb.x}-${state.bomb.y}`).className = 'snake-bomb';
+                }
+                
+                // 更新分数
+                scoreEl.textContent = state.score;
+                lengthEl.textContent = state.snake.length;
+            }
+            
+            // 生成新食物
+            function generateFood() {
+                let newFood;
+                do {
+                    newFood = {
+                        x: Math.floor(Math.random() * config.cols),
+                        y: Math.floor(Math.random() * config.rows)
+                    };
+                } while (
+                    state.snake.some(segment => segment.x === newFood.x && segment.y === newFood.y) ||
+                    (state.bomb && state.bomb.x === newFood.x && state.bomb.y === newFood.y)
+                );
+                
+                state.food = newFood;
+                
+                // 10%概率生成炸弹
+                if (Math.random() < 0.1 && !state.bomb) {
+                    generateBomb();
+                } else if (state.bomb && Math.random() < 0.3) {
+                    // 30%概率移除已有的炸弹
+                    state.bomb = null;
+                }
+            }
+            
+            // 生成炸弹
+            function generateBomb() {
+                let newBomb;
+                do {
+                    newBomb = {
+                        x: Math.floor(Math.random() * config.cols),
+                        y: Math.floor(Math.random() * config.rows)
+                    };
+                } while (
+                    state.snake.some(segment => segment.x === newBomb.x && segment.y === newBomb.y) ||
+                    (state.food.x === newBomb.x && state.food.y === newBomb.y)
+                );
+                
+                state.bomb = newBomb;
+                
+                // 5秒后自动消失
+                setTimeout(() => {
+                    if (state.bomb && state.running) {
+                        state.bomb = null;
+                        render();
+                    }
+                }, 5000);
+            }
+            
+            // 移动蛇
+            function move() {
+                if (!state.running) return;
+                
+                // 更新方向
+                state.direction = state.nextDirection;
+                
+                // 创建新头部
+                const head = {...state.snake[0]};
+                switch (state.direction) {
+                    case 'up': head.y--; break;
+                    case 'down': head.y++; break;
+                    case 'left': head.x--; break;
+                    case 'right': head.x++; break;
+                }
+                
+                // 碰撞检测（墙）
+                if (head.x < 0 || head.x >= config.cols || head.y < 0 || head.y >= config.rows) {
+                    gameOver();
+                    return;
+                }
+                
+                // 碰撞检测（自己）
+                if (state.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    gameOver();
+                    return;
+                }
+                
+                // 添加新头部
+                state.snake.unshift(head);
+                
+                // 检测是否吃到食物
+                if (head.x === state.food.x && head.y === state.food.y) {
+                    state.score += 10;
+                    state.speed = Math.max(50, config.initialSpeed - (state.score / 10) * config.speedIncrease);
+                    generateFood();
+                    showSound('好吃！');
+                    
+                    // 每吃5个食物加速提示
+                    if (state.snake.length % 5 === 0) {
+                        showSound('速度变快啦！');
+                    }
+                } 
+                // 检测是否吃到炸弹
+                else if (state.bomb && head.x === state.bomb.x && head.y === state.bomb.y) {
+                    state.score = Math.max(0, state.score - 5);
+                    state.bomb = null;
+                    
+                    // 缩短蛇身
+                    if (state.snake.length > 3) {
+                        state.snake.pop();
+                        state.snake.pop();
+                        state.snake.pop();
+                    } else if (state.snake.length > 1) {
+                        state.snake.pop();
+                    }
+                    
+                    showSound('哎呀！吃到炸弹了！');
+                    generateFood();
+                }
+                // 没吃到食物，移除尾部
+                else {
+                    state.snake.pop();
+                }
+                
+                // 渲染并设置下一次移动
+                render();
+                state.timer = setTimeout(move, state.speed);
+            }
+            
+            // 开始游戏
+            function startGame() {
+                if (state.running) return;
+                
+                state.running = true;
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+                showSound('游戏开始！');
+                move();
+            }
+            
+            // 暂停游戏
+            function pauseGame() {
+                if (!state.running) return;
+                
+                state.running = false;
+                clearTimeout(state.timer);
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+                showSound('游戏暂停');
+            }
+            
+            // 游戏结束
+            function gameOver() {
+                state.running = false;
+                clearTimeout(state.timer);
+                finalScoreEl.textContent = state.score;
+                gameOverEl.classList.remove('hidden');
+                showSound('游戏结束！洗碗去！');
+            }
+            
+            // 重置游戏
+            function resetGame() {
+                state = {
+                    snake: [{x: 10, y: 10}],
+                    direction: 'right',
+                    nextDirection: 'right',
+                    food: {x: 5, y: 10},
+                    bomb: null,
+                    score: 0,
+                    speed: config.initialSpeed,
+                    running: false,
+                    timer: null
+                };
+                gameOverEl.classList.add('hidden');
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+                generateFood();
+                render();
+            }
+            
+            // 方向控制
+            function setDirection(direction) {
+                // 防止180度转向
+                if (
+                    (state.direction === 'up' && direction === 'down') ||
+                    (state.direction === 'down' && direction === 'up') ||
+                    (state.direction === 'left' && direction === 'right') ||
+                    (state.direction === 'right' && direction === 'left')
+                ) {
+                    return;
+                }
+                state.nextDirection = direction;
+            }
+            
+            // 事件监听
+            startBtn.addEventListener('click', startGame);
+            pauseBtn.addEventListener('click', pauseGame);
+            restartBtn.addEventListener('click', resetGame);
+            document.getElementById('reset-snake').addEventListener('click', resetGame);
+            closeBtn.addEventListener('click', () => {
+                gameOverEl.classList.add('hidden');
+            });
+            
+            // 键盘控制
+            document.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowUp': setDirection('up'); break;
+                    case 'ArrowDown': setDirection('down'); break;
+                    case 'ArrowLeft': setDirection('left'); break;
+                    case 'ArrowRight': setDirection('right'); break;
+                    case ' ': // 空格暂停/继续
+                        state.running ? pauseGame() : startGame();
+                        break;
+                }
+            });
+            
+            // 触屏控制
+            document.querySelectorAll('.snake-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const direction = btn.getAttribute('data-direction');
+                    setDirection(direction);
+                });
+            });
+            
+            // 初始化
+            createBoard();
+            generateFood();
+            render();
+            
+            // 暴露游戏控制方法
+            snakeGame = {
+                start: startGame,
+                pause: pauseGame,
+                reset: resetGame,
+                get running() { return state.running; }
+            };
+        }
+        
+        // 2. 运势占卜实现
+        function initFortuneTeller() {
+            const divineBtn = document.getElementById('divine-btn');
+            const redivineBtn = document.getElementById('redivine-btn');
+            const resultEl = document.getElementById('fortune-result');
+            const loadingEl = document.getElementById('fortune-loading');
+            const titleEl = document.getElementById('fortune-title');
+            const descEl = document.getElementById('fortune-description');
+            const starsEl = document.getElementById('fortune-stars');
+            
+            // 运势数据
+            const fortunes = [
+                {
+                    title: "大吉！",
+                    description: "今天你会遇到会说话的猫!",
+                    stars: 5
+                },
+                {
+                    title: "中吉",
+                    description: "今天穿袜子会给你带来好运!",
+                    stars: 4
+                },
+                {
+                    title: "小吉",
+                    description: "下午3点会有神秘人请你喝奶茶",
+                    stars: 3
+                },
+                {
+                    title: "末吉",
+                    description: "今天有人正在偷偷计划惊喜",
+                    stars: 3
+                },
+                {
+                    title: "小凶",
+                    description: "虽然是小xiong但是也很软！",
+                    stars: 6
+                },
+                {
+                    title: "中凶",
+                    description: "今天可能会消化不良，请使用人类慢食碗进食！",
+                    stars: 1
+                },
+                {
+                    title: "大凶",
+                    description: "但没关系，反着看就是大吉!",
+                    stars: 5
+                }
+            ];
+            
+            // 生成星星
+            function generateStars(count) {
+                starsEl.innerHTML = '';
+                for (let i = 0; i < 5; i++) {
+                    const star = document.createElement('i');
+                    star.className = `fa fa-star text-accent ${i < count ? '' : 'opacity-30'}`;
+                    starsEl.appendChild(star);
+                }
+            }
+            
+            // 占卜
+            function divine() {
+                resultEl.classList.add('hidden');
+                loadingEl.classList.remove('hidden');
+                divineBtn.disabled = true;
+                
+                showSound('占卜中...');
+                
+                // 模拟加载时间
+                setTimeout(() => {
+                    const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+                    titleEl.textContent = randomFortune.title;
+                    descEl.textContent = randomFortune.description;
+                    generateStars(randomFortune.stars);
+                    
+                    loadingEl.classList.add('hidden');
+                    resultEl.classList.remove('hidden');
+                    divineBtn.disabled = false;
+                    
+                    showSound('占卜完成！');
+                }, 2000);
+            }
+            
+            // 事件监听
+            divineBtn.addEventListener('click', divine);
+            redivineBtn.addEventListener('click', divine);
+        }
+        
+        // 初始化运势占卜
+        initFortuneTeller();
+        
+        // 3. 奇怪任务生成器实现
+        function initTaskGenerator() {
+            const generateBtn = document.getElementById('generate-task-btn');
+            const newTaskBtn = document.getElementById('new-task-btn');
+            const acceptBtn = document.getElementById('accept-task-btn');
+            const rejectBtn = document.getElementById('reject-task-btn');
+            const taskCard = document.getElementById('task-card');
+            const taskText = document.getElementById('task-text');
+            const taskActions = document.getElementById('task-actions');
+            const taskFeedback = document.getElementById('task-feedback');
+            const tasksHistory = document.getElementById('tasks-history');
+            
+            // 任务列表
+            const tasks = [
+                "学小狗叫3声，还要摇一下尾巴（必须有动作）",
+                "给对方洗一次袜子，并且要边洗边夸袜子香",
+                "连续说10句夸对方的话，不能重复，否则重来",
+                "模仿对方最常说的一句话，要惟妙惟肖",
+                "把对方的照片设为手机壁纸，保持至少3天",
+                "给对方按摩10分钟，手法不好会被打",
+                "唱一首跑调的情歌给对方听，必须唱完",
+                "说出对方3个优点和1个缺点（缺点要委婉）",
+                "下次见面主动带一份对方爱吃的零食",
+                "答应对方一个合理的要求，不能反悔",
+                "在朋友圈发一张对方的丑照（3分钟后可删）",
+                "学猫咪撒娇，说'求求你啦'，持续10秒",
+                "给对方取3个可爱的外号，并且要解释原因",
+                "陪对方看一部自己不喜欢但对方喜欢的电影",
+                "说出3件你偷偷为对方做过的事"
+            ];
+            
+            // 惩罚列表
+            const punishments = [
+                "罚你洗一个星期的碗",
+                "罚你给对方买一杯超甜奶茶",
+                "罚你做20个俯卧撑",
+                "罚你给对方按摩30分钟",
+                "罚你承包下次约会所有费用"
+            ];
+            
+            // 当前任务
+            let currentTask = null;
+            
+            // 生成任务
+            function generateTask() {
+                taskFeedback.classList.add('hidden');
+                const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
+                currentTask = randomTask;
+                taskText.textContent = randomTask;
+                taskCard.classList.remove('hidden');
+                taskActions.classList.remove('hidden');
+                
+                // 添加动画
+                taskCard.classList.remove('pop-big');
+                void taskCard.offsetWidth; // 重置动画
+                taskCard.classList.add('pop-big');
+                
+                showSound('任务生成！');
+            }
+            
+            // 接受任务
+            function acceptTask() {
+                if (!currentTask) return;
+                
+                taskFeedback.innerHTML = `
+                    <div class="bg-green-50 text-green-700 p-3 rounded-full inline-block pop-big">
+                        <i class="fa fa-check-circle mr-1"></i> 太棒了！记得履行承诺哦～
+                    </div>
+                `;
+                taskFeedback.classList.remove('hidden');
+                taskActions.classList.add('hidden');
+                
+                // 添加到历史
+                addToHistory(currentTask, true);
+                
+                showSound('接受任务！');
+            }
+            
+            // 拒绝任务
+            function rejectTask() {
+                if (!currentTask) return;
+                
+                const randomPunishment = punishments[Math.floor(Math.random() * punishments.length)];
+                
+                taskFeedback.innerHTML = `
+                    <div class="bg-red-50 text-red-700 p-3 rounded-full inline-block pop-big">
+                        <i class="fa fa-times-circle mr-1"></i> 拒绝接受任务！${randomPunishment}
+                    </div>
+                `;
+                taskFeedback.classList.remove('hidden');
+                taskActions.classList.add('hidden');
+                
+                // 添加到历史
+                addToHistory(currentTask, false);
+                
+                showSound('居然拒绝？');
+            }
+            
+            // 添加到历史
+            function addToHistory(task, accepted) {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'bg-gray-50 p-2 rounded text-gray-600 slide-in';
+                historyItem.innerHTML = `
+                    <i class="fa ${accepted ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'} mr-1"></i>
+                    ${task.substring(0, 20)}${task.length > 20 ? '...' : ''}
+                `;
+                tasksHistory.insertBefore(historyItem, tasksHistory.firstChild);
+                
+                // 限制历史记录数量
+                if (tasksHistory.children.length > 5) {
+                    tasksHistory.removeChild(tasksHistory.lastChild);
+                }
+            }
+            
+            // 事件监听
+            generateBtn.addEventListener('click', generateTask);
+            newTaskBtn.addEventListener('click', generateTask);
+            acceptBtn.addEventListener('click', acceptTask);
+            rejectBtn.addEventListener('click', rejectTask);
+        }
+        
+        // 初始化任务生成器
+        initTaskGenerator();
+        
+        // 4. 早饭选择器实现
+        function initFoodWheel() {
+            const wheelEl = document.getElementById('wheel-inner');
+            const spinBtn = document.getElementById('spin-wheel-btn');
+            const resultEl = document.getElementById('food-result');
+            const resultFoodEl = document.getElementById('result-food');
+            const resultDescEl = document.getElementById('result-description');
+            const newFoodInput = document.getElementById('new-food');
+            const addFoodBtn = document.getElementById('add-food-btn');
+            
+            // 食物列表
+            let foods = [
+                {name: "小笼包", color: "#FF3366", desc: "今天就吃小笼包吧！记得加醋，美味加倍～ 谁去买？石头剪刀布决定！"},
+                {name: "豆浆油条", color: "#FFCC00", desc: "经典搭配豆浆油条，简单又美味。油条要趁热吃才香哦！"},
+                {name: "煎饼果子", color: "#FF9900", desc: "来一套煎饼果子，加个蛋加根肠，能量满满一整天！"},
+                {name: "面包牛奶", color: "#FF6699", desc: "简单的面包配牛奶，适合懒人。记得把面包烤一下更香～"},
+                {name: "粥配小菜", color: "#66CC99", desc: "清淡的粥配爽口小菜，养胃又舒服。今天就吃这个吧！"},
+                {name: "牛肉面", color: "#CC6633", desc: "热腾腾的牛肉面，加个煎蛋，暖心又暖胃。谁负责煮？"},
+                {name: "馄饨", color: "#3399FF", desc: "鲜美馄饨配汤喝，暖和又舒服。要不要加点辣椒油？"},
+                {name: "三明治", color: "#FF6666", desc: "自制三明治，健康又美味。火腿鸡蛋生菜一样不能少！"}
+            ];
+            
+            // 创建食物转盘
+            function createWheel() {
+                wheelEl.innerHTML = '';
+                const sliceAngle = 360 / foods.length;
+                
+                foods.forEach((food, index) => {
+                    const slice = document.createElement('div');
+                    slice.className = 'absolute inset-0';
+                    slice.style.transformOrigin = '50% 50%';
+                    slice.style.transform = `rotate(${index * sliceAngle}deg)`;
+                    slice.style.clipPath = `polygon(50% 50%, 50% 0%, calc(50% + 50% * cos(${sliceAngle}deg * 0.01745)) calc(50% - 50% * sin(${sliceAngle}deg * 0.01745)))`;
+                    slice.style.backgroundColor = food.color;
+                    
+                    // 添加文字
+                    const text = document.createElement('div');
+                    text.className = 'absolute white-space-nowrap transform origin-bottom-left';
+                    text.style.left = '50%';
+                    text.style.top = '0';
+                    text.style.transform = `rotate(${sliceAngle/2}deg) translate(-50%, 0)`;
+                    text.style.fontSize = '12px';
+                    text.style.fontWeight = 'bold';
+                    text.style.color = 'white';
+                    text.style.paddingTop = '10px';
+                    text.textContent = food.name;
+                    
+                    slice.appendChild(text);
+                    wheelEl.appendChild(slice);
+                });
+            }
+            
+            // 旋转转盘
+            function spinWheel() {
+                if (wheelSpinning) return;
+                
+                wheelSpinning = true;
+                spinBtn.disabled = true;
+                spinBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 转动中...';
+                resultEl.classList.add('hidden');
+                
+                showSound('转盘开始！');
+                
+                // 随机旋转角度（3-5圈）
+                const randomAngle = 360 * (3 + Math.random() * 2) + Math.random() * 360;
+                const duration = 5 + Math.random() * 2; // 5-7秒
+                
+                // 应用旋转
+                const foodWheel = document.getElementById('food-wheel');
+                foodWheel.style.transition = `transform ${duration}s cubic-bezier(0.2, 0.8, 0.2, 1)`;
+                foodWheel.style.transform = `rotate(${randomAngle}deg)`;
+                
+                // 计算结果
+                setTimeout(() => {
+                    // 计算最终角度（取模360）
+                    const finalAngle = randomAngle % 360;
+                    const sliceAngle = 360 / foods.length;
+                    const selectedIndex = Math.floor((360 - finalAngle) % 360 / sliceAngle);
+                    const selectedFood = foods[selectedIndex];
+                    
+                    // 显示结果
+                    resultFoodEl.textContent = selectedFood.name;
+                    resultDescEl.textContent = selectedFood.desc;
+                    resultEl.classList.remove('hidden');
+                    
+                    // 重置状态
+                    wheelSpinning = false;
+                    spinBtn.disabled = false;
+                    spinBtn.innerHTML = '<i class="fa fa-refresh mr-2"></i> 开始转盘';
+                    
+                    showSound(`今天吃${selectedFood.name}！`);
+                }, duration * 1000);
+            }
+            
+            // 添加新食物
+            function addFood() {
+                const foodName = newFoodInput.value.trim();
+                if (!foodName) return;
+                
+                // 检查是否已存在
+                if (foods.some(f => f.name === foodName)) {
+                    showSound('这个已经有啦！');
+                    return;
+                }
+                
+                // 随机颜色
+                const randomColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+                
+                // 添加到列表
+                foods.push({
+                    name: foodName,
+                    color: randomColor,
+                    desc: `今天就吃${foodName}吧！听起来就很美味～ 谁去准备呢？`
+                });
+                
+                // 更新转盘
+                createWheel();
+                
+                // 清空输入
+                newFoodInput.value = '';
+                
+                showSound('添加成功！');
+            }
+            
+            // 事件监听
+            spinBtn.addEventListener('click', spinWheel);
+            addFoodBtn.addEventListener('click', addFood);
+            newFoodInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addFood();
+            });
+            
+            // 初始化转盘
+            createWheel();
+        }
+        
+        // 隐藏彩蛋
+        secretEasterEgg.addEventListener('click', () => {
+            const secrets = [
+                "偷偷告诉你：其实所有随机结果都是我控制的～",
+                "隐藏功能：连续点击贪吃蛇10次会出现超级食物！",
+                "其实...我最喜欢和你一起吃早餐了",
+                "你知道吗？学猪叫会变聪明！",
+                "彩蛋：把手机倒过来看运势会不一样哦（骗你的）",
+                "其实我每天都在想该给你生成什么任务～"
+            ];
+            const randomSecret = secrets[Math.floor(Math.random() * secrets.length)];
+            
+            alert(randomSecret);
+            showSound('秘密泄露啦！');
+        });
+        
+        // 初始化页面
+        window.addEventListener('load', () => {
+            // 在DOM完全加载后绑定返回按钮
+            bindBackButtons();
+            showSound('Welcome to Pig pig Pig‘tasks！');
+        });
+    </script>
+</body>
+</html>
