@@ -6,8 +6,7 @@
     <title>Pig pig Pig‘tasks</title>
     <!-- 引入Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入Font Awesome图标 -->
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 使用内联SVG图标代替Font Awesome -->
     
     <!-- 自定义配置 -->
     <script>
@@ -51,6 +50,9 @@
             .fade-in-fast {
                 animation: fadeIn 0.3s ease-out;
             }
+            .fade-out-fast {
+                animation: fadeOut 0.3s ease-out;
+            }
             .slide-in {
                 animation: slideIn 0.5s ease-out;
             }
@@ -61,14 +63,35 @@
         
         /* 全局字体设置确保所有元素使用可爱风格字体，增强兼容性 */
         *, *::before, *::after {
-            font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded MT Bold', 'Comic Neue', 'Kalam', 'Chalkboard SE', 'Marker Felt', 'Caveat', cursive, sans-serif !important;
+            /* 优化字体堆栈，将系统默认字体放在最后，确保符号兼容性 */
+            font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded MT Bold', 'Comic Neue', 'Kalam', 'Chalkboard SE', 'Marker Felt', 'Caveat', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'SimHei', sans-serif !important;
             font-weight: 500;
             letter-spacing: 0.02em;
+            /* 确保文本渲染质量 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* 确保body和主要内容区域的字体应用 */
         body, .content, .game-area, .task-container, .fortune-container, .breakfast-container {
-            font-family: 'Comic Sans MS', 'Marker Felt', cursive, sans-serif !important;
+            font-family: 'Comic Sans MS', 'Marker Felt', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'SimHei', sans-serif !important;
+        }
+
+        /* 特殊符号处理 */
+        .symbol-container, .emoji, .icon, .fa {
+            /* 为符号元素单独设置字体，优先使用系统默认字体确保符号兼容性 */
+            font-family: 'FontAwesome', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', 'Android Emoji', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'SimHei', sans-serif !important;
+            font-style: normal !important;
+            font-weight: normal !important;
+            text-decoration: inherit !important;
+        }
+
+        /* 功能卡片图标增强 */
+        .feature-card i {
+            display: inline-block;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         @keyframes bounceXL {
@@ -112,6 +135,11 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
         
         @keyframes slideIn {
@@ -184,7 +212,7 @@
 <body class="bg-gradient-to-br from-light to-pink-50 min-h-screen font-funny text-dark overflow-x-hidden">
     <!-- 音效提示（文字模拟） -->
     <div id="sound-effect" class="fixed top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-50 hidden fade-in-fast">
-        <i class="fa fa-volume-up mr-1"></i> <span id="sound-text">叮咚～</span>
+        <svg class="w-5 h-5 mr-1 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg> <span id="sound-text">叮咚～</span>
     </div>
     
     <!-- 主容器 -->
@@ -210,7 +238,10 @@
             <!-- 功能卡片1：贪吃蛇 -->
             <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="snake">
                 <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa fa-gamepad text-2xl text-secondary"></i>
+                    <!-- 内联SVG替代Font Awesome -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" class="text-secondary">
+                        <path fill="currentColor" d="M441.7 97.6c9.4 7.4 24.6 5.8 32-3.6s5.8-24.6-3.6-32c-124.7-99.7-315.7-99.7-440.4 0C12.2 60 10.7 75.1 19.2 82.6s24.6 5.8 32-3.6C103.7 44.8 202.5 32 256 32s152.3 12.8 204.8 56.1c8.3 9.4 22.6 11 32 3.6zM496 288H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v64H96c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16h-16v-64h80v64h-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16h-16v-64h80v64h-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16h-16v-64h80c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16z"/>
+                    </svg>
                 </div>
                 <h3 class="font-bold text-lg mb-1">贪吃蛇大作战</h3>
                 <p class="text-sm text-gray-500">输了的洗碗！</p>
@@ -219,7 +250,10 @@
             <!-- 功能卡片2：运势占卜 -->
             <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="fortune">
                 <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa fa-magic text-2xl text-accent"></i>
+                    <!-- 内联SVG替代Font Awesome -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" class="text-accent">
+                        <path fill="currentColor" d="M460.1 32.1c-3.8-1.7-8.1-1.7-11.9 0L312 82.7V32c0-8.8-7.2-16-16-16s-16 7.2-16 16v50.7L63.8 32.1c-3.8-1.7-8.1-1.7-11.9 0s-1.7 8.1 0 11.9L232 176.6V480c0 8.8 7.2 16 16 16s16-7.2 16-16V176.6l180.1-132.6c1.7-3.8 1.7-8.1 0-11.9z"/>
+                    </svg>
                 </div>
                 <h3 class="font-bold text-lg mb-1">今日运势</h3>
                 <p class="text-sm text-gray-500">不准不要钱！</p>
@@ -228,7 +262,10 @@
             <!-- 功能卡片3：奇怪任务 -->
             <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="tasks">
                 <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa fa-random text-2xl text-primary"></i>
+                    <!-- 内联SVG替代Font Awesome -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" class="text-primary">
+                        <path fill="currentColor" d="M16 32c17.7 0 32 14.3 32 32v32h48V64c0-17.7 14.3-32 32-32s32 14.3 32 32v32h48V64c0-17.7 14.3-32 32-32s32 14.3 32 32v32h48V64c0-17.7 14.3-32 32-32s32 14.3 32 32v32h48V64c0-17.7 14.3-32 32-32s32 14.3 32 32v224c0 17.7-14.3 32-32 32s-32-14.3-32-32V128H416v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V128H320v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V128H224v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V128H128v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V128H48v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V64c0-17.7 14.3-32 32-32zm416 384H64c-17.7 0-32 14.3-32 32s14.3 32 32 32h368c17.7 0 32-14.3 32-32s-14.3-32-32-32z"/>
+                    </svg>
                 </div>
                 <h3 class="font-bold text-lg mb-1">猪之任务生成器</h3>
                 <p class="text-sm text-gray-500">敢不敢接招？</p>
@@ -237,7 +274,10 @@
             <!-- 功能卡片4：早饭选择 -->
             <div class="feature-card bg-white rounded-2xl shadow-lg p-5 text-center cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl" data-feature="breakfast">
                 <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa fa-cutlery text-2xl text-green-500"></i>
+                    <!-- 内联SVG替代Font Awesome -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" class="text-green-500">
+                        <path fill="currentColor" d="M496 384c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H464c17.7 0 32 14.3 32 32zM96 128H32C14.3 128 0 142.3 0 160v64c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32zm0 256H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32s-14.3-32-32-32zm128-288H160c-17.7 0-32 14.3-32 32v224c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32zm0 256H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32s-14.3-32-32-32zm128-192H288c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zm0 256H288c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32s-14.3-32-32-32zm128-192H416c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32z"/>
+                    </svg>
                 </div>
                 <h3 class="font-bold text-lg mb-1">早餐吃什么</h3>
                 <p class="text-sm text-gray-500">选择困难症救星</p>
@@ -254,16 +294,18 @@
                 
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-secondary flex items-center">
-                        <i class="fa fa-gamepad mr-2"></i> 贪吃蛇大作战
+                        <svg class="w-6 h-6 mr-2 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7H9v10h6V7zm-4 8H7V9h4v6zm8-8h-2v10h2V7zm-2 8h-2V9h2v6zm2-10H7v14h12V5z"></path></svg> 贪吃蛇大作战
                     </h2>
                     <!-- 专门优化的返回按钮 -->
                     <button 
                         id="snake-back-btn" 
                         class="back-btn bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm transition-all" 
-                        style="position: relative; z-index: 9999; display: block; width: auto; height: auto;"
+                        style="position: relative; z-index: 9999; display: block; width: auto; height: auto;" 
                         onclick="console.log('返回按钮直接点击'); goToMainMenu(); return false;"
                     >
-                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                        <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                        </svg> 返回
                     </button>
                 </div>
                 
@@ -291,32 +333,47 @@
                     <div class="snake-controls mt-6 max-w-xs mx-auto">
                         <div class="flex justify-center mb-2">
                             <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="up">
-                                <i class="fa fa-arrow-up text-secondary"></i>
-                            </button>
+                                        <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+                                        </svg>
+                                    </button>
                         </div>
                         <div class="flex justify-center gap-2">
                             <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="left">
-                                <i class="fa fa-arrow-left text-secondary"></i>
-                            </button>
+                                        <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                                        </svg>
+                                    </button>
                             <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="down">
-                                <i class="fa fa-arrow-down text-secondary"></i>
-                            </button>
+                                        <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M7.41 7.41L12 12l4.59-4.59L18 9l-6 6-6-6 1.41-1.59z"/>
+                                        </svg>
+                                    </button>
                             <button class="snake-btn bg-secondary/20 hover:bg-secondary/40 w-14 h-14 rounded-full flex items-center justify-center" data-direction="right">
-                                <i class="fa fa-arrow-right text-secondary"></i>
-                            </button>
+                                        <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                                        </svg>
+                                    </button>
                         </div>
                     </div>
                     
                     <!-- 游戏控制 -->
                     <div class="mt-6 flex justify-center gap-3">
                         <button id="start-snake" class="bg-secondary hover:bg-secondary/90 text-white px-5 py-2 rounded-full text-sm transition-all">
-                            <i class="fa fa-play mr-1"></i> 开始游戏
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M10.804 8L5 4.633v6.734L10.804 8z" fill-rule="evenodd"/>
+                            </svg> 开始游戏
                         </button>
                         <button id="pause-snake" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-full text-sm transition-all" disabled>
-                            <i class="fa fa-pause mr-1"></i> 暂停
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8a.5.5 0 0 1 .5-.5z"/>
+                            </svg> 暂停
                         </button>
                         <button id="reset-snake" class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full text-sm transition-all">
-                            <i class="fa fa-refresh mr-1"></i> 重新开始
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                            </svg> 重新开始
                         </button>
                     </div>
                     
@@ -324,7 +381,10 @@
                     <div id="snake-over" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden fade-in-fast">
                         <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center pop-big">
                             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fa fa-meh-o text-3xl text-red-500"></i>
+                                <svg class="w-12 h-12 text-red-500" viewBox="0 0 16 16" fill="currentColor">
+                                    <circle cx="8" cy="8" r="8" fill="currentColor"/>
+                                    <path d="M6 5.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1zm3 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                </svg>
                             </div>
                             <h3 class="text-xl font-bold mb-2">游戏结束！</h3>
                             <p class="text-gray-600 mb-4">你的分数: <span id="final-score" class="font-bold">0</span></p>
@@ -351,23 +411,33 @@
                 
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-accent flex items-center">
-                        <i class="fa fa-magic mr-2"></i> 今日运势占卜
+                        <svg class="w-6 h-6 mr-2" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            <path fill-rule="evenodd" d="M16 8c0 3.866-3.582 7-8 7a8.841 8.841 0 0 1-4.038-.948.531.531 0 0 1-.622-.283.518.518 0 0 1-.054-.629A8.018 8.018 0 0 1 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zm-8 3c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6z"/>
+                        </svg> 今日运势占卜
                     </h2>
                     <button class="back-btn bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm transition-all">
-                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                        <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                        </svg> 返回
                     </button>
                 </div>
                 
                 <div class="text-center">
                     <div class="w-32 h-32 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
-                        <i class="fa fa-star text-4xl text-accent float-random"></i>
+                        <svg class="w-10 h-10 text-accent float-random" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.505.505 0 0 0-.461 0z"/>
+                        </svg>
                         <div class="absolute inset-0 border-4 border-dashed border-accent/30 rounded-full animate-spin-slow"></div>
                     </div>
                     
                     <p class="mb-6 text-gray-600">想知道今天的运势吗？<br>点击下方按钮，让宇宙给你答案！</p>
                     
                     <button id="divine-btn" class="bg-accent hover:bg-accent/90 text-dark px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-8">
-                        <i class="fa fa-hand-paper-o mr-2"></i> 开始占卜
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708L8.707 9l5.147 5.146a.5.5 0 0 1-.708.708l-5.5-5.5a.5.5 0 0 1 0-.708l5.5-5.5a.5.5 0 0 1 .708 0z"/>
+                            <path d="M8 2.5a.5.5 0 0 1 .5.5v4.303l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 7.303V3a.5.5 0 0 1 .5-.5z"/>
+                        </svg> 开始占卜
                     </button>
                     
                     <!-- 运势结果 -->
@@ -385,7 +455,10 @@
                         </div>
                         
                         <button id="redivine-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-full transition-all">
-                            <i class="fa fa-refresh mr-1"></i> 再占一次
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                            </svg> 再占一次
                         </button>
                     </div>
                     
@@ -406,10 +479,15 @@
                 
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-primary flex items-center">
-                        <i class="fa fa-random mr-2"></i> 猪之任务生成器
+                        <svg class="w-6 h-6 mr-2" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            <path fill-rule="evenodd" d="M16 8c0 3.866-3.582 7-8 7a8.841 8.841 0 0 1-4.038-.948.531.531 0 0 1-.622-.283.518.518 0 0 1-.054-.629A8.018 8.018 0 0 1 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zm-8 3c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6z"/>
+                        </svg> 猪之任务生成器
                     </h2>
                     <button class="back-btn bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm transition-all">
-                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                        <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                        </svg> 返回
                     </button>
                 </div>
                 
@@ -417,7 +495,9 @@
                     <p class="mb-6 text-gray-600">生成一个让对方做的"好事"，<br>不做就要接受惩罚哦！</p>
                     
                     <button id="generate-task-btn" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-6">
-                        <i class="fa fa-bolt mr-2"></i> 生成任务
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M9.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 0a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5zm2.22-4.22a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8.5 10.293l2.646-2.647a.5.5 0 0 1 .708 0zm-10 4.22a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 9.5l2.646 2.647a.5.5 0 0 1-.708.708l-3-3z"/>
+                        </svg> 生成任务
                     </button>
                     
                     <!-- 任务卡片 -->
@@ -430,13 +510,20 @@
                     <!-- 操作按钮 -->
                     <div id="task-actions" class="flex justify-center gap-4 mt-6 hidden">
                         <button id="accept-task-btn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition-all">
-                            <i class="fa fa-check mr-1"></i> 接受
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            </svg> 接受
                         </button>
                         <button id="reject-task-btn" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full transition-all">
-                            <i class="fa fa-times mr-1"></i> 拒绝
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg> 拒绝
                         </button>
                         <button id="new-task-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-full transition-all">
-                            <i class="fa fa-refresh mr-1"></i> 换一个
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                            </svg> 换一个
                         </button>
                     </div>
                     
@@ -446,14 +533,20 @@
                     <!-- 任务历史 -->
                     <div class="mt-8">
                         <h3 class="text-lg font-bold mb-3 flex items-center justify-center">
-                            <i class="fa fa-history text-gray-500 mr-2"></i> 任务历史
+                            <svg class="w-5 h-5 text-gray-500 mr-2" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8.5 0a.5.5 0 0 1 .5.5v1.5H14a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V3H2a.5.5 0 0 1 0-1h6V.5a.5.5 0 0 1 .5-.5zm5.75 15H2a1.5 1.5 0 0 1-1.5-1.5v-7A1.5 1.5 0 0 1 2 5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5zm-2 0a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h11z"/>
+                            </svg> 任务历史
                         </h3>
                         <div id="tasks-history" class="space-y-2 max-h-[150px] overflow-y-auto pr-2 text-sm">
                             <div class="bg-gray-50 p-2 rounded text-gray-600">
-                                <i class="fa fa-check-circle text-green-500 mr-1"></i> 学猫叫3声并摇尾巴
+                                <svg class="w-4 h-4 text-green-500 mr-1 inline" viewBox="0 0 16 16" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                </svg> 学猫叫3声并摇尾巴
                             </div>
                             <div class="bg-gray-50 p-2 rounded text-gray-600">
-                                <i class="fa fa-times-circle text-red-500 mr-1"></i> 给对方洗袜子（拒绝）
+                                <svg class="w-4 h-4 text-red-500 mr-1 inline" viewBox="0 0 16 16" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg> 给对方洗袜子（拒绝）
                             </div>
                         </div>
                     </div>
@@ -469,10 +562,10 @@
                 
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-green-500 flex items-center">
-                        <i class="fa fa-cutlery mr-2"></i> 早餐吃什么
+                        <svg class="w-6 h-6 mr-2 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M16 7.08c0 1.77-.84 3.25-2 4.12V21h-2V11.2c-1.16-.87-2-2.35-2-4.12 0-2.21 1.79-4 4-4s4 1.79 4 4zM12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5S14.76 2 12 2zm0 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm-9 9H3v6c0 1.1.9 2 2 2h4v-8H6v-2c0-2.21 1.79-4 4-4h4c.44 0 .8.06 1.15.15.13.03.25.05.38.08l1.46-1.46c-.37-.27-.8-.49-1.29-.62C15.87 6.09 14.06 5 12 5H6c-3.31 0-6 2.69-6 6v1z"></path></svg> 早餐吃什么
                     </h2>
                     <button class="back-btn bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm transition-all">
-                        <i class="fa fa-arrow-left mr-1"></i> 返回
+                        <svg class="w-5 h-5 mr-1 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg> 返回
                     </button>
                 </div>
                 
@@ -484,7 +577,9 @@
                         <div id="food-wheel" class="w-full h-full rounded-full border-8 border-green-500 overflow-hidden relative transition-all duration-500">
                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div class="w-16 h-16 bg-white rounded-full z-10 shadow-md flex items-center justify-center">
-                                    <i class="fa fa-cutlery text-green-500 text-2xl"></i>
+                                    <svg class="w-8 h-8 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M11.375 9.724l3.25 2.437 1.5-2.001a.374.374 0 0 1 .599.249v5.65c0 .414-.524.645-.845.38l-3.5-2.626-3.5 2.626a.375.375 0 0 1-.6-.249v-5.65a.375.375 0 0 1 .599-.249l1.5 2.001 3.25-2.437a.375.375 0 0 1 .251-.062zm7.212-4.479a.375.375 0 0 1 .375.375V12.2c0 .414-.524.645-.845.38L16.5 11l-1.612 1.58a.375.375 0 0 1-.6-.249V5.62a.375.375 0 0 1 .375-.374h3.637zm-15.75 0A.375.375 0 0 1 3 .818V12.2a.375.375 0 0 1-.6.249L1.5 11l-1.612 1.58A.374.374 0 0 1 0 12.2V.818a.375.375 0 0 1 .375-.375h3.637z"/>
+                                    </svg>
                                 </div>
                             </div>
                             <div id="wheel-inner" class="w-full h-full">
@@ -494,8 +589,11 @@
                         <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-red-500 rounded-full z-20"></div>
                     </div>
                     
-                    <button id="spin-wheel-btn" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-6">
-                        <i class="fa fa-refresh mr-2"></i> 开始转盘
+                    <button id="spin-wheel-btn" class="bg-accent hover:bg-accent/90 text-dark px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 mb-6">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                        </svg> 开始转盘
                     </button>
                     
                     <!-- 结果显示 -->
@@ -514,7 +612,7 @@
                         <div class="flex gap-2">
                             <input type="text" id="new-food" placeholder="比如：豆浆油条" class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <button id="add-food-btn" class="bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-full transition-all">
-                                <i class="fa fa-plus"></i>
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -524,7 +622,7 @@
         
         <!-- 页脚彩蛋 -->
         <footer class="text-center text-gray-500 text-sm mt-8 pb-6">
-            <p>本工具最终解释权归毛所有 <i class="fa fa-evil text-primary"></i></p>
+            <p>本工具最终解释权归毛所有 <svg class="w-5 h-5 text-primary inline" viewBox="0 0 24 24" fill="currentColor"><path d="M18.65 13.15C17.62 14.65 16.34 15.76 14.8 16.33c-.75.27-1.54.4-2.35.4s-1.6-.13-2.35-.4c-1.54-.57-2.82-1.68-3.85-3.18l4.14-4.14c.3-.3.77-.3 1.06 0l5.5 5.5c.3.3.3.77 0 1.06zM12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8c2.05 0 3.94-.67 5.5-1.81l-1.41-1.41c-1.21.81-2.59 1.31-4.09 1.31-3.31 0-6-2.69-6-6s2.69-6 6-6c1.5 0 2.88.5 4.09 1.31l1.41-1.41C15.94 4.67 14.05 4 12 4z"></path></svg></p>
             <p class="mt-2">哈基米毛毛大人<button id="secret-easter-egg" class="text-xs text-gray-400 bg-transparent border-none cursor-pointer hover:text-primary">（偷偷点我）</button></p>
         </footer>
     </div>
@@ -1014,8 +1112,13 @@
             function generateStars(count) {
                 starsEl.innerHTML = '';
                 for (let i = 0; i < 5; i++) {
-                    const star = document.createElement('i');
-                    star.className = `fa fa-star text-accent ${i < count ? '' : 'opacity-30'}`;
+                    const star = document.createElement('div');
+                    star.className = `flex items-center justify-center ${i < count ? '' : 'opacity-30'}`;
+                    star.innerHTML = `
+                        <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        </svg>
+                    `;
                     starsEl.appendChild(star);
                 }
             }
@@ -1117,7 +1220,7 @@
                 
                 taskFeedback.innerHTML = `
                     <div class="bg-green-50 text-green-700 p-3 rounded-full inline-block pop-big">
-                        <i class="fa fa-check-circle mr-1"></i> 太棒了！记得履行承诺哦～
+                        <svg class="w-5 h-5 mr-1 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> 太棒了！记得履行承诺哦～
                     </div>
                 `;
                 taskFeedback.classList.remove('hidden');
@@ -1137,7 +1240,7 @@
                 
                 taskFeedback.innerHTML = `
                     <div class="bg-red-50 text-red-700 p-3 rounded-full inline-block pop-big">
-                        <i class="fa fa-times-circle mr-1"></i> 拒绝接受任务！${randomPunishment}
+                        <svg class="w-5 h-5 mr-1 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg> 拒绝接受任务！${randomPunishment}
                     </div>
                 `;
                 taskFeedback.classList.remove('hidden');
@@ -1154,7 +1257,9 @@
                 const historyItem = document.createElement('div');
                 historyItem.className = 'bg-gray-50 p-2 rounded text-gray-600 slide-in';
                 historyItem.innerHTML = `
-                    <i class="fa ${accepted ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'} mr-1"></i>
+                    <svg class="w-5 h-5 mr-1 ${accepted ? 'text-green-500' : 'text-red-500'}" viewBox="0 0 24 24" fill="currentColor">
+                        ${accepted ? '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>' : '<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>'}
+                    </svg>
                     ${task.substring(0, 20)}${task.length > 20 ? '...' : ''}
                 `;
                 tasksHistory.insertBefore(historyItem, tasksHistory.firstChild);
@@ -1233,7 +1338,7 @@
                 
                 wheelSpinning = true;
                 spinBtn.disabled = true;
-                spinBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 转动中...';
+                spinBtn.innerHTML = '<svg class="w-5 h-5 mr-2 inline animate-spin" viewBox="0 0 24 24" fill="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 转动中...';
                 resultEl.classList.add('hidden');
                 
                 showSound('转盘开始！');
@@ -1263,7 +1368,7 @@
                     // 重置状态
                     wheelSpinning = false;
                     spinBtn.disabled = false;
-                    spinBtn.innerHTML = '<i class="fa fa-refresh mr-2"></i> 开始转盘';
+                    spinBtn.innerHTML = '<svg class="w-5 h-5 mr-2 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg> 开始转盘';
                     
                     showSound(`今天吃${selectedFood.name}！`);
                 }, duration * 1000);
@@ -1310,7 +1415,7 @@
             createWheel();
         }
         
-        // 隐藏彩蛋
+        // 优化版彩蛋功能 - 随机显示文案或漂浮猫猫
         secretEasterEgg.addEventListener('click', () => {
             const secrets = [
                 "偷偷告诉你：其实所有随机结果都是我控制的～",
@@ -1318,12 +1423,90 @@
                 "其实...我最喜欢和你一起吃早餐了",
                 "你知道吗？学猪叫会变聪明！",
                 "彩蛋：把手机倒过来看运势会不一样哦（骗你的）",
-                "其实我每天都在想该给你生成什么任务～"
+                "今天该给你布置什么任务呢～",
+                "提示：对这个按钮说'喵'会有惊喜（并没有）",
+                "发现了没有？贪吃蛇的眼睛是爱心形状的～",
+                "世界上有会编程的猪！\n（这是真的）"
             ];
-            const randomSecret = secrets[Math.floor(Math.random() * secrets.length)];
             
-            alert(randomSecret);
-            showSound('秘密泄露啦！');
+            // 50%概率显示文案，50%概率显示漂浮猫猫
+            const showText = Math.random() > 0.3;
+            
+            if (showText) {
+                const randomSecret = secrets[Math.floor(Math.random() * secrets.length)];
+                
+                // 创建更美观的提示框替代alert
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full z-50 pop-big';
+                notification.innerHTML = `
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-12 h-12 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-800 mb-4">${randomSecret}</p>
+                        <button id="secret-close" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-full transition-all">
+                            知道啦
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                
+                // 添加遮罩层
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-black/50 z-40 fade-in-fast';
+                document.body.appendChild(overlay);
+                
+                // 关闭按钮事件
+                document.getElementById('secret-close').addEventListener('click', () => {
+                    notification.classList.add('fade-out-fast');
+                    overlay.classList.add('fade-out-fast');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                        document.body.removeChild(overlay);
+                    }, 300);
+                });
+            } else {
+                // 创建漂浮的猫猫元素
+                for (let i = 0; i < 15; i++) {
+                    const cat = document.createElement('div');
+                    cat.className = 'fixed text-3xl z-50 emoji';
+                    
+                    // 随机选择猫表情
+                    const catEmojis = ['🐱', '🐈', '😺', '😸', '😹', '😻', '😼', '😽'];
+                    cat.textContent = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+                    
+                    cat.style.left = `${Math.random() * 100}vw`;
+                    cat.style.top = `${Math.random() * 100}vh`;
+                    cat.style.transform = `scale(${Math.random() * 1.5 + 0.8})`;
+                    cat.style.opacity = '0';
+                    document.body.appendChild(cat);
+                    
+                    // 延迟出现的动画效果
+                    setTimeout(() => {
+                        cat.style.transition = 'all 0.5s ease-out';
+                        cat.style.opacity = '1';
+                    }, i * 150);
+                    
+                    // 飘动并消失的动画效果
+                    setTimeout(() => {
+                        cat.style.transition = 'all 3s ease-out';
+                        const randomX = (Math.random() - 0.5) * 100;
+                        cat.style.transform += ` translate(${randomX}px, -150vh) rotate(${Math.random() * 720 - 360}deg)`;
+                        cat.style.opacity = '0';
+                        
+                        // 移除元素
+                        setTimeout(() => {
+                            if (document.body.contains(cat)) {
+                                document.body.removeChild(cat);
+                            }
+                        }, 3000);
+                    }, 1000 + i * 150);
+                }
+            }
+            
+            showSound(showText ? '秘密泄露啦！' : '好多猫猫～');
         });
         
         // 初始化页面
